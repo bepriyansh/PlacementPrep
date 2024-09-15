@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const questionsDirectory = path.join(process.cwd(), "config", "questions");
     const files = await fs.readdir(questionsDirectory);
-    const filenames = files.map((filename) => path.parse(filename).name);
+    const filenames = files.map((filename) => path.parse(filename).name).sort();
 
     return NextResponse.json({ companies: filenames }, { status: 200 });
   } catch (error) {
