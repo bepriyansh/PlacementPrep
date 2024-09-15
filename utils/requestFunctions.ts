@@ -1,25 +1,4 @@
-import { CompanyData, CompanyQuestion } from "@/types/interfaces";
-
-const getCompanies = async (): Promise<CompanyData[]> => {
-  try {
-    const res = await fetch("/api/getcompanies", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!res.ok) {
-      return [];
-    }
-
-    const data: CompanyData[] = await res.json();
-
-    return data;
-  } catch (error) {
-    return [];
-  }
-};
+import {  CompanyQuestion } from "@/types/interfaces";
 
 const getQuestions = async (company: string): Promise<CompanyQuestion[]> => {
   try {
@@ -44,4 +23,4 @@ const getQuestions = async (company: string): Promise<CompanyQuestion[]> => {
   return [];
 };
 
-export { getCompanies, getQuestions };
+export {  getQuestions };

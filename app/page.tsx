@@ -72,7 +72,7 @@ const Page = () => {
           variant="bordered"
           onClick={handleSortChange}
         >
-          Sort by Questions Asked
+          Sort
         </Button>
         <div className="w-full max-w-[400px] mb-5">{searchInput}</div>
       </div>
