@@ -6,6 +6,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { CompanyQuestion } from "@/types/interfaces";
 
+const validateNumberString = (num : string) : Boolean =>{
+  for(let i = 0; i < num.length; i++){
+    if(num[i]<'0' || num[i]>'9') return false;
+  }
+  return true;
+}
+
 export async function POST(req: NextRequest) {
   const companyName = (await req.json()) + ".csv";
 
@@ -22,7 +29,13 @@ export async function POST(req: NextRequest) {
 
         fs.createReadStream(filePath)
           .pipe(csvParser())
-          .on("data", (data) => results.push({ ...data, index: index++ }))
+          .on("data", (data) => {
+            if (!validateNumberString(data.num_occur)) {
+              console.log("validated", data.num_occur)
+              data.num_occur = "1";
+            }
+            results.push({ ...data, index: index++ });
+          })
           .on("end", () => {
             resolve(results);
           })
