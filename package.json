@@ -9,6 +9,7 @@
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
 	},
 	"dependencies": {
+		"@nextui-org/accordion": "^2.0.39",
 		"@nextui-org/button": "2.0.38",
 		"@nextui-org/code": "2.0.33",
 		"@nextui-org/image": "^2.0.32",
@@ -25,11 +26,13 @@
 		"@react-aria/visually-hidden": "3.8.12",
 		"clsx": "2.1.1",
 		"framer-motion": "~11.1.1",
+		"fs": "^0.0.1-security",
 		"intl-messageformat": "^10.5.0",
 		"next": "14.2.4",
 		"next-themes": "^0.2.1",
 		"react": "18.3.1",
-		"react-dom": "18.3.1"
+		"react-dom": "18.3.1",
+		"react-icons": "^5.3.0"
 	},
 	"devDependencies": {
 		"@types/node": "20.5.7",

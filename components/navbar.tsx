@@ -7,7 +7,8 @@ import {
 import { Link } from "@nextui-org/link";
 import { Input } from "@nextui-org/input";
 import NextLink from "next/link";
-import { Image } from "@nextui-org/image";
+
+import { ThemeSwitch } from "./theme-switch";
 
 import { siteConfig } from "@/config/site";
 import { GithubIcon, SearchIcon } from "@/components/icons";
@@ -34,11 +35,7 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Image
-              alt="DSA"
-              className="h-8 my-2 rounded-none"
-              src={siteConfig.logo}
-            />
+            <siteConfig.logo size={40} />
           </NextLink>
         </NavbarBrand>
       </NavbarContent>
@@ -59,6 +56,9 @@ export const Navbar = () => {
           >
             <GithubIcon className="text-default-500" />
           </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <ThemeSwitch />
         </NavbarItem>
       </NavbarContent>
     </NextUINavbar>
