@@ -1,6 +1,6 @@
 import { CompanyData, CompanyQuestion } from "@/types/interfaces";
 
-const getCompanies = async (): Promise<CompanyData> => {
+const getCompanies = async (): Promise<CompanyData[]> => {
   try {
     const res = await fetch("/api/getcompanies", {
       method: "GET",
@@ -10,14 +10,14 @@ const getCompanies = async (): Promise<CompanyData> => {
     });
 
     if (!res.ok) {
-      return { companies: [] };
+      return [];
     }
 
-    const data: CompanyData = await res.json();
+    const data: CompanyData[] = await res.json();
 
     return data;
   } catch (error) {
-    return { companies: [] };
+    return [];
   }
 };
 

@@ -1,5 +1,6 @@
 interface CompanyData {
-  companies: string[];
+  company: string;
+  index: string;
 }
 
 interface CompanyQuestion {

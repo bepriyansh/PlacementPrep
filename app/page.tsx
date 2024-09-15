@@ -1,40 +1,35 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 
-import { getCompanies } from "@/utils/requestFunctions";
 import QuestionList from "@/components/questionList";
+import { CompaniesData } from "@/config/companies";
 
 const Page = () => {
-  const [companies, setCompanies] = useState<string[]>([]);
-  const initialized = useRef(false);
-
-  useEffect(() => {
-    if (!initialized.current) {
-      initialized.current = true;
-      const fetchData = async () => {
-        const data = await getCompanies();
-
-        setCompanies(data.companies);
-      };
-
-      fetchData();
-    }
-  }, []);
-
   return (
     <div>
-      {companies.length > 0 ? (
-        <Accordion selectionMode="multiple" variant="bordered">
-          {companies.map((company, i) => (
-            <AccordionItem key={i} aria-label={company} title={company}>
-              <QuestionList name={company} />
-            </AccordionItem>
-          ))}
-        </Accordion>
-      ) : (
-        <></>
-      )}
+      <Accordion>
+        {CompaniesData.map((company, i) => (
+          <AccordionItem
+            key={i}
+            aria-label={company.name}
+            startContent={
+              <div className="border border-slate-500/50 py-2 px-4 rounded-xl mr-3">
+                {company.index}
+              </div>
+            }
+            subtitle={
+              <p className="flex">
+                <span className="text-primary mr-1">{company.questions}</span>{" "}
+                questions asked
+              </p>
+            }
+            title={company.name}
+          >
+            <QuestionList name={company.name} />
+          </AccordionItem>
+        ))}
+      </Accordion>
     </div>
   );
 };
