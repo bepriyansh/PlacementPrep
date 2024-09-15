@@ -18,9 +18,11 @@ export async function POST(req: NextRequest) {
 
     const parsedData = await new Promise<CompanyQuestion[]>(
       (resolve, reject) => {
+        let index = 1;
+
         fs.createReadStream(filePath)
           .pipe(csvParser())
-          .on("data", (data) => results.push(data))
+          .on("data", (data) => results.push({ ...data, index: index++ }))
           .on("end", () => {
             resolve(results);
           })

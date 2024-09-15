@@ -25,7 +25,7 @@ const Page = () => {
   return (
     <div>
       {companies.length > 0 ? (
-        <Accordion variant="bordered">
+        <Accordion selectionMode="multiple" variant="bordered">
           {companies.map((company, i) => (
             <AccordionItem key={i} aria-label={company} title={company}>
               <QuestionList name={company} />

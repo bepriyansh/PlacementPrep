@@ -5,31 +5,14 @@ import {
   NavbarItem,
 } from "@nextui-org/navbar";
 import { Link } from "@nextui-org/link";
-import { Input } from "@nextui-org/input";
 import NextLink from "next/link";
 
 import { ThemeSwitch } from "./theme-switch";
 
 import { siteConfig } from "@/config/site";
-import { GithubIcon, SearchIcon } from "@/components/icons";
+import { GithubIcon } from "@/components/icons";
 
 export const Navbar = () => {
-  const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
-      }}
-      labelPlacement="outside"
-      placeholder="Search..."
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0 mr-1" />
-      }
-      type="search"
-    />
-  );
-
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -38,9 +21,6 @@ export const Navbar = () => {
             <siteConfig.logo size={40} />
           </NextLink>
         </NavbarBrand>
-      </NavbarContent>
-      <NavbarContent className="flex justify-center items-center">
-        <NavbarItem className="w-full">{searchInput}</NavbarItem>
       </NavbarContent>
 
       <NavbarContent

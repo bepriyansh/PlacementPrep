@@ -3,6 +3,7 @@ interface CompanyData {
 }
 
 interface CompanyQuestion {
+  index: string;
   problem_link: string;
   problem_name: string;
   num_occur: string;

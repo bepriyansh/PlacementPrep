@@ -19,6 +19,7 @@ type CompanyQuestionKey = keyof CompanyQuestion;
 
 const QuestionList = (props: CompanyInterface) => {
   const colsNames = [
+    { key: "index", label: "Index" },
     { key: "problem_name", label: "Question" },
     { key: "problem_link", label: "Link" },
     { key: "num_occur", label: "Occurrence" },
@@ -56,8 +57,12 @@ const QuestionList = (props: CompanyInterface) => {
   return (
     <div>
       <Table
+        isHeaderSticky
         isStriped
         aria-label="Example table with client-side sorting"
+        classNames={{ base: "max-h-[600px] overflow-y-auto" }}
+        color="danger"
+        selectionMode="single"
         sortDescriptor={list.sortDescriptor}
         onSortChange={list.sort}
       >
