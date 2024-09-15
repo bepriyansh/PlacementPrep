@@ -4,7 +4,7 @@ import fs from "fs";
 import csvParser from "csv-parser";
 import { NextRequest, NextResponse } from "next/server";
 
-import { CompanyQuestion } from "@/interfaces/interfaces";
+import { CompanyQuestion } from "@/types/interfaces";
 
 export async function POST(req: NextRequest) {
   const companyName = (await req.json()) + ".csv";

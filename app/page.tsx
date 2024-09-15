@@ -27,11 +27,7 @@ const Page = () => {
       {companies.length > 0 ? (
         <Accordion variant="bordered">
           {companies.map((company, i) => (
-            <AccordionItem
-              key={i}
-              aria-label={company}
-              title={company}
-            >
+            <AccordionItem key={i} aria-label={company} title={company}>
               <QuestionList name={company} />
             </AccordionItem>
           ))}

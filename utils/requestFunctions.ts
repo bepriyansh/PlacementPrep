@@ -1,4 +1,4 @@
-import { CompanyData, CompanyQuestion } from "@/interfaces/interfaces";
+import { CompanyData, CompanyQuestion } from "@/types/interfaces";
 
 const getCompanies = async (): Promise<CompanyData> => {
   try {
