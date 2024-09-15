@@ -25,6 +25,7 @@
 		"@react-aria/ssr": "3.9.4",
 		"@react-aria/visually-hidden": "3.8.12",
 		"clsx": "2.1.1",
+		"csv-parser": "^3.0.0",
 		"framer-motion": "~11.1.1",
 		"fs": "^0.0.1-security",
 		"intl-messageformat": "^10.5.0",

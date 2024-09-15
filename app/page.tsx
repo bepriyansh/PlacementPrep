@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 
 import { getCompanies } from "@/utils/requestFunctions";
+import QuestionList from "@/components/questionList";
 
 const Page = () => {
   const [companies, setCompanies] = useState<string[]>([]);
@@ -21,9 +22,6 @@ const Page = () => {
     }
   }, []);
 
-  const defaultContent =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
-
   return (
     <div>
       {companies.length > 0 ? (
@@ -32,10 +30,9 @@ const Page = () => {
             <AccordionItem
               key={i}
               aria-label={company}
-              subtitle={<span>0/32</span>}
               title={company}
             >
-              {defaultContent}
+              <QuestionList name={company} />
             </AccordionItem>
           ))}
         </Accordion>
