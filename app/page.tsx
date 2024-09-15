@@ -8,15 +8,12 @@ import { CompaniesData } from "@/config/companies";
 import { SearchIcon } from "@/components/icons";
 
 const Page = () => {
-  // State to store the search query
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Function to handle search input change
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value.toLowerCase());
   };
 
-  // Filter companies based on search query
   const filteredCompanies = CompaniesData.filter((company) =>
     company.name.toLowerCase().includes(searchQuery),
   );
@@ -45,9 +42,9 @@ const Page = () => {
         <div className="w-full max-w-[400px] mb-5">{searchInput}</div>
       </div>
       <Accordion selectionMode="multiple" variant="bordered">
-        {filteredCompanies.map((company, i) => (
+        {filteredCompanies.map((company) => (
           <AccordionItem
-            key={i}
+            key={company.index}
             aria-label={company.name}
             startContent={
               <div className="border border-slate-500/50 py-2 px-4 rounded-xl mr-3">
