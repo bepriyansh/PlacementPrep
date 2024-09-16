@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SiLeetcode } from "react-icons/si";
 import { Spinner } from "@nextui-org/spinner";
-import { Checkbox } from "@nextui-org/checkbox";
 import { Link } from "@nextui-org/link";
 import { FcCollapse, FcExpand } from "react-icons/fc";
 
@@ -18,6 +17,8 @@ const QuestionList = (props: CompanyInterface) => {
   } | null>(null);
 
   const initialized = useRef(false);
+  const localStorageKey = "solvedQuestions";
+  const [checkedQuestions, setCheckedQuestions] = useState<string[]>([]);
 
   useEffect(() => {
     const action = async () => {
@@ -29,10 +30,12 @@ const QuestionList = (props: CompanyInterface) => {
     if (!initialized.current) {
       initialized.current = true;
       action();
+      setCheckedQuestions(
+        JSON.parse(localStorage.getItem(localStorageKey) || "[]"),
+      );
     }
   }, [props.name]);
 
-  // Sorting function
   const sortQuestions = (key: keyof CompanyQuestion) => {
     let direction: "asc" | "desc" = "asc";
 
@@ -57,6 +60,24 @@ const QuestionList = (props: CompanyInterface) => {
     setSortConfig({ key, direction });
     setQuestions(sortedData);
   };
+
+  const isSaved = (problemLink: string): boolean => {
+    return checkedQuestions.includes(problemLink);
+  };
+
+  const handleLinks = (problemLink: string) => {
+    if (isSaved(problemLink)) {
+      setCheckedQuestions(
+        checkedQuestions.filter((link) => link !== problemLink),
+      );
+    } else {
+      setCheckedQuestions([...checkedQuestions, problemLink]);
+    }
+  };
+
+  useEffect(() => {
+    localStorage.setItem(localStorageKey, JSON.stringify(checkedQuestions));
+  }, [checkedQuestions]);
 
   return (
     <div className="bg-default-50 p-4 rounded-xl max-h-[600px] overflow-y-auto">
@@ -100,8 +121,13 @@ const QuestionList = (props: CompanyInterface) => {
             className={`grid items-center grid-cols-[minmax(40px,auto),minmax(90px,auto),minmax(150px,1fr),minmax(90px,auto),minmax(90px,auto)]  ${i % 2 === 1 ? "bg-gray-700/5 dark:bg-slate-100/5" : ""} hover:bg-gray-700/10 hover:dark:bg-slate-100/10 text-inherit hover:text-blue-600 py-1 px-4 rounded-lg`}
             href={question.problem_link}
           >
-            <div className="text-center">
-              <Checkbox />
+            <div className="text-center flex items-center justify-center">
+              <input
+                checked={isSaved(question.problem_link)}
+                className="h-4 w-4 text-blue-600"
+                type="checkbox"
+                onChange={() => handleLinks(question.problem_link)}
+              />
             </div>
             <div className="text-center">{question.index}</div>
             <Link
