@@ -1,4 +1,4 @@
-import {  CompanyQuestion } from "@/types/interfaces";
+import { CompanyQuestion } from "@/types/interfaces";
 
 const getQuestions = async (company: string): Promise<CompanyQuestion[]> => {
   try {
@@ -23,4 +23,4 @@ const getQuestions = async (company: string): Promise<CompanyQuestion[]> => {
   return [];
 };
 
-export {  getQuestions };
+export { getQuestions };

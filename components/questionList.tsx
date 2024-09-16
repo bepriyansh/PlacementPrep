@@ -1,103 +1,131 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SiLeetcode } from "react-icons/si";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-} from "@nextui-org/table";
 import { Spinner } from "@nextui-org/spinner";
+import { Checkbox } from "@nextui-org/checkbox";
 import { Link } from "@nextui-org/link";
-import { useAsyncList } from "@react-stately/data";
+import { FcCollapse, FcExpand } from "react-icons/fc";
 
-import { CompanyInterface, CompanyQuestion } from "@/types/interfaces";
 import { getQuestions } from "@/utils/requestFunctions";
-type CompanyQuestionKey = keyof CompanyQuestion;
+import { CompanyInterface, CompanyQuestion } from "@/types/interfaces";
 
 const QuestionList = (props: CompanyInterface) => {
-  const colsNames = [
-    { key: "index", label: "Index" },
-    { key: "problem_name", label: "Question" },
-    { key: "problem_link", label: "Link" },
-    { key: "num_occur", label: "Occurrence" },
-  ];
+  const cols = ["", "Index", "Question", "Link", "Occurrence"];
+  const [questions, setQuestions] = useState<CompanyQuestion[]>([]);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof CompanyQuestion;
+    direction: "asc" | "desc";
+  } | null>(null);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const initialized = useRef(false);
 
-  const list = useAsyncList<CompanyQuestion>({
-    async load() {
+  useEffect(() => {
+    const action = async () => {
       const data = await getQuestions(props.name);
 
-      setIsLoading(false);
+      setQuestions(data);
+    };
 
-      return {
-        items: data || [],
-      };
-    },
-    async sort({ items, sortDescriptor }) {
-      return {
-        items: items.sort((a, b) => {
-          let first = a[sortDescriptor.column as CompanyQuestionKey];
-          let second = b[sortDescriptor.column as CompanyQuestionKey];
-          const cmp =
-            (parseInt(first as string) || first) <
-            (parseInt(second as string) || second)
-              ? -1
-              : 1;
+    if (!initialized.current) {
+      initialized.current = true;
+      action();
+    }
+  }, [props.name]);
 
-          return sortDescriptor.direction === "descending" ? -cmp : cmp;
-        }),
-      };
-    },
-  });
+  // Sorting function
+  const sortQuestions = (key: keyof CompanyQuestion) => {
+    let direction: "asc" | "desc" = "asc";
+
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "asc"
+    ) {
+      direction = "desc";
+    }
+
+    const sortedData = [...questions].sort((a, b) => {
+      const aValue = key === "num_occur" ? Number(a[key]) : a[key];
+      const bValue = key === "num_occur" ? Number(b[key]) : b[key];
+
+      if (aValue < bValue) return direction === "asc" ? -1 : 1;
+      if (aValue > bValue) return direction === "asc" ? 1 : -1;
+
+      return 0;
+    });
+
+    setSortConfig({ key, direction });
+    setQuestions(sortedData);
+  };
 
   return (
-    <div>
-      <Table
-        isHeaderSticky
-        isStriped
-        aria-label="Example table with client-side sorting"
-        classNames={{ base: "max-h-[600px] overflow-y-auto" }}
-        color="danger"
-        selectionMode="single"
-        sortDescriptor={list.sortDescriptor}
-        onSortChange={list.sort}
-      >
-        <TableHeader>
-          {colsNames.map((col) => (
-            <TableColumn key={col.key} allowsSorting>
-              {col.label}
-            </TableColumn>
-          ))}
-        </TableHeader>
-        <TableBody
-          isLoading={isLoading}
-          items={list.items}
-          loadingContent={<Spinner label="Loading..." />}
-        >
-          {(item) => (
-            <TableRow key={item.problem_name}>
-              {(columnKey) => (
-                <TableCell>
-                  {columnKey === "problem_link" ? (
-                    <Link
-                      isExternal
-                      href={item[columnKey as CompanyQuestionKey] as string}
-                    >
-                      <SiLeetcode size={20} />
-                    </Link>
+    <div className="bg-default-50 p-4 rounded-xl max-h-[600px] overflow-y-auto">
+      <div className="w-full">
+        <div className="grid items-center grid-cols-[minmax(40px,auto),minmax(90px,auto),minmax(150px,1fr),minmax(90px,auto),minmax(90px,auto)] px-4 bg-default-100 text-center sticky top-0 rounded-lg shadow-lg mb-1 py-1 z-20">
+          {cols.map((col, i) => (
+            <button
+              key={i}
+              className="text-sm py-2 cursor-pointer hover:text-gray-700 duration-200 flex justify-center items-center gap-1"
+              onClick={() => {
+                if (i === 1) sortQuestions("index");
+                else if (i === 2) sortQuestions("problem_name");
+                else if (i === 4) sortQuestions("num_occur");
+              }}
+            >
+              {col}
+              {sortConfig?.key ===
+                (i === 1
+                  ? "index"
+                  : i === 2
+                    ? "problem_name"
+                    : i === 4
+                      ? "num_occur"
+                      : "") && (
+                <>
+                  {sortConfig.direction === "asc" ? (
+                    <FcCollapse size={10} />
                   ) : (
-                    item[columnKey as CompanyQuestionKey]
+                    <FcExpand size={10} />
                   )}
-                </TableCell>
+                </>
               )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            </button>
+          ))}
+        </div>
+
+        {questions.map((question, i) => (
+          <Link
+            key={question.index}
+            isExternal
+            className={`grid items-center grid-cols-[minmax(40px,auto),minmax(90px,auto),minmax(150px,1fr),minmax(90px,auto),minmax(90px,auto)]  ${i % 2 === 1 ? "bg-gray-700/5 dark:bg-slate-100/5" : ""} hover:bg-gray-700/10 hover:dark:bg-slate-100/10 text-inherit hover:text-blue-600 py-1 px-4 rounded-lg`}
+            href={question.problem_link}
+          >
+            <div className="text-center">
+              <Checkbox />
+            </div>
+            <div className="text-center">{question.index}</div>
+            <Link
+              isExternal
+              className="text-inherit"
+              href={question.problem_link}
+            >
+              {question.problem_name}
+            </Link>
+            <div className="text-center">
+              <Link isExternal href={question.problem_link}>
+                <SiLeetcode size={25} />
+              </Link>
+            </div>
+            <div className="text-center">{question.num_occur}</div>
+          </Link>
+        ))}
+      </div>
+
+      {questions.length === 0 ? (
+        <div className="flex w-full justify-center items-center h-32">
+          <Spinner label="Loading..." />
+        </div>
+      ) : null}
     </div>
   );
 };
