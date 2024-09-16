@@ -44,7 +44,7 @@ const Page = () => {
     <Input
       aria-label="Search"
       classNames={{
-        inputWrapper: "bg-transparent border",
+        inputWrapper: "bg-default-100",
         input: "text-sm",
       }}
       labelPlacement="outside"
@@ -60,7 +60,7 @@ const Page = () => {
 
   return (
     <div>
-      <div className="flex justify-between w-full">
+      <div className="flex justify-between gap-2 w-full">
         <Button
           endContent={
             sortOrder === "asc" ? (

@@ -81,7 +81,7 @@ const QuestionList = (props: CompanyInterface) => {
 
   return (
     <div className="bg-default-50 p-4 rounded-xl max-h-[600px] overflow-y-auto">
-      <div className="w-full">
+      <div className="w-full min-w-[600px]">
         <div className="grid items-center grid-cols-[minmax(40px,auto),minmax(90px,auto),minmax(150px,1fr),minmax(90px,auto),minmax(90px,auto)] px-4 bg-default-100 text-center sticky top-0 rounded-lg shadow-lg mb-1 py-1 z-20">
           {cols.map((col, i) => (
             <button
