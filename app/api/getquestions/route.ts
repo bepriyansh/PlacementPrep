@@ -16,6 +16,7 @@ const validateNumberString = (num: string): Boolean => {
 
 export async function POST(req: NextRequest) {
   const companyName = (await req.json()) + ".csv";
+  const difficulty = ["Medium", "Easy", "Hard", ""];
 
   try {
     const questionsDirectory = path.join(process.cwd(), "config", "questions");
@@ -31,6 +32,8 @@ export async function POST(req: NextRequest) {
         fs.createReadStream(filePath)
           .pipe(csvParser())
           .on("data", (data) => {
+            data.difficulty = data.difficulty.trim();
+            if (!difficulty.includes(data.difficulty)) data.difficulty = "";
             if (!validateNumberString(data.num_occur)) {
               data.num_occur = "1";
             }

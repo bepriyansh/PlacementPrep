@@ -8,6 +8,7 @@ interface CompanyQuestion {
   problem_link: string;
   problem_name: string;
   num_occur: string;
+  difficulty: string;
 }
 
 interface CompanyInterface {

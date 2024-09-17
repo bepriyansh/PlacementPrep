@@ -9,7 +9,7 @@ import { getQuestions } from "@/utils/requestFunctions";
 import { CompanyInterface, CompanyQuestion } from "@/types/interfaces";
 
 const QuestionList = (props: CompanyInterface) => {
-  const cols = ["", "Index", "Question", "Link", "Occurrence"];
+  const cols = ["", "Index", "Question", "Difficulty", "Link", "Occurrence"];
   const [questions, setQuestions] = useState<CompanyQuestion[]>([]);
   const [sortConfig, setSortConfig] = useState<{
     key: keyof CompanyQuestion;
@@ -47,9 +47,23 @@ const QuestionList = (props: CompanyInterface) => {
       direction = "desc";
     }
 
+    const difficultyOrder: { [key: string]: number } = {
+      Hard: 3,
+      Medium: 2,
+      Easy: 1,
+    };
+
     const sortedData = [...questions].sort((a, b) => {
-      const aValue = key === "num_occur" ? Number(a[key]) : a[key];
-      const bValue = key === "num_occur" ? Number(b[key]) : b[key];
+      let aValue: any = a[key];
+      let bValue: any = b[key];
+
+      if (key === "difficulty") {
+        aValue = difficultyOrder[a.difficulty] || 0;
+        bValue = difficultyOrder[b.difficulty] || 0;
+      } else if (key === "num_occur") {
+        aValue = Number(a[key]);
+        bValue = Number(b[key]);
+      }
 
       if (aValue < bValue) return direction === "asc" ? -1 : 1;
       if (aValue > bValue) return direction === "asc" ? 1 : -1;
@@ -82,7 +96,7 @@ const QuestionList = (props: CompanyInterface) => {
   return (
     <div className="bg-default-50 p-4 rounded-xl max-h-[600px] overflow-y-auto">
       <div className="w-full min-w-[600px]">
-        <div className="grid items-center grid-cols-[minmax(40px,auto),minmax(90px,auto),minmax(150px,1fr),minmax(90px,auto),minmax(90px,auto)] px-4 bg-default-100 text-center sticky top-0 rounded-lg shadow-lg mb-1 py-1 z-20">
+        <div className="grid items-center grid-cols-[minmax(40px,auto),minmax(90px,auto),minmax(150px,1fr),minmax(90px,auto),minmax(90px,auto),minmax(90px,auto)] px-4 bg-default-100 text-center sticky top-0 rounded-lg shadow-lg mb-1 py-1 z-20">
           {cols.map((col, i) => (
             <button
               key={i}
@@ -90,7 +104,8 @@ const QuestionList = (props: CompanyInterface) => {
               onClick={() => {
                 if (i === 1) sortQuestions("index");
                 else if (i === 2) sortQuestions("problem_name");
-                else if (i === 4) sortQuestions("num_occur");
+                else if (i === 3) sortQuestions("difficulty");
+                else if (i === 5) sortQuestions("num_occur");
               }}
             >
               {col}
@@ -99,9 +114,11 @@ const QuestionList = (props: CompanyInterface) => {
                   ? "index"
                   : i === 2
                     ? "problem_name"
-                    : i === 4
-                      ? "num_occur"
-                      : "") && (
+                    : i === 3
+                      ? "difficulty"
+                      : i === 5
+                        ? "num_occur"
+                        : "") && (
                 <>
                   {sortConfig.direction === "asc" ? (
                     <FcCollapse size={10} />
@@ -118,7 +135,7 @@ const QuestionList = (props: CompanyInterface) => {
           <Link
             key={question.index}
             isExternal
-            className={`grid items-center grid-cols-[minmax(40px,auto),minmax(90px,auto),minmax(150px,1fr),minmax(90px,auto),minmax(90px,auto)]  ${i % 2 === 1 ? "bg-gray-700/5 dark:bg-slate-100/5" : ""} hover:bg-gray-700/10 hover:dark:bg-slate-100/10 text-inherit hover:text-blue-600 py-1 px-4 rounded-lg`}
+            className={`grid items-center grid-cols-[minmax(40px,auto),minmax(90px,auto),minmax(150px,1fr),minmax(90px,auto),minmax(90px,auto),minmax(90px,auto)]  ${i % 2 === 1 ? "bg-gray-700/5 dark:bg-slate-100/5" : ""} hover:bg-gray-700/10 hover:dark:bg-slate-100/10 text-inherit hover:text-blue-600 py-1 px-4 rounded-lg`}
             href={question.problem_link}
           >
             <div className="text-center flex items-center justify-center">
@@ -137,6 +154,7 @@ const QuestionList = (props: CompanyInterface) => {
             >
               {question.problem_name}
             </Link>
+            <div className="text-center">{question.difficulty}</div>
             <div className="text-center">
               <Link isExternal href={question.problem_link}>
                 <SiLeetcode size={25} />
