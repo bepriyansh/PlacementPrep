@@ -4,6 +4,9 @@ import { SiLeetcode } from "react-icons/si";
 import { Spinner } from "@nextui-org/spinner";
 import { Link } from "@nextui-org/link";
 import { FcCollapse, FcExpand } from "react-icons/fc";
+import { Input } from "@nextui-org/input";
+
+import { SearchIcon } from "./icons";
 
 import { getQuestions } from "@/utils/requestFunctions";
 import { CompanyInterface, CompanyQuestion } from "@/types/interfaces";
@@ -93,8 +96,36 @@ const QuestionList = (props: CompanyInterface) => {
     localStorage.setItem(localStorageKey, JSON.stringify(checkedQuestions));
   }, [checkedQuestions]);
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value.toLowerCase());
+  };
+  const filteredQuestions = questions.filter((question) =>
+    question.problem_name.toLowerCase().includes(searchQuery),
+  );
+  const searchInput = (
+    <Input
+      aria-label="Search"
+      classNames={{
+        inputWrapper: "bg-default-100",
+        input: "text-sm",
+      }}
+      labelPlacement="outside"
+      placeholder="Search by question name..."
+      startContent={
+        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0 mr-1" />
+      }
+      type="search"
+      value={searchQuery}
+      onChange={handleSearchChange}
+    />
+  );
+
   return (
     <div className="bg-default-50 p-4 rounded-xl max-h-[600px] overflow-y-auto">
+      <div className="flex justify-end gap-2 w-full">
+        <div className="w-full max-w-[400px] mb-5">{searchInput}</div>
+      </div>
       <div className="w-full min-w-[600px]">
         <div className="grid items-center grid-cols-[minmax(40px,auto),minmax(90px,auto),minmax(150px,1fr),minmax(90px,auto),minmax(90px,auto),minmax(90px,auto)] px-4 bg-default-100 text-center sticky top-0 rounded-lg shadow-lg mb-1 py-1 z-20">
           {cols.map((col, i) => (
@@ -131,7 +162,7 @@ const QuestionList = (props: CompanyInterface) => {
           ))}
         </div>
 
-        {questions.map((question, i) => (
+        {filteredQuestions.map((question, i) => (
           <Link
             key={question.index}
             isExternal
