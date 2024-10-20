@@ -1,34 +1,27 @@
-"use server";
-import path from "path";
-import fs from "fs";
-
-import csvParser from "csv-parser";
-
 import { CompanyQuestion } from "@/types/interfaces";
 
-// // Discontinued this implementation
-// const getQuestions = async (company: string): Promise<CompanyQuestion[]> => {
-//   try {
-//     const res = await fetch("/api/getquestions", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(company),
-//     });
+const getQuestions = async (company: string): Promise<CompanyQuestion[]> => {
+  try {
+    const res = await fetch("/api/getquestions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(company),
+    });
 
-//     if (!res.ok) {
-//       return [];
-//     }
-//     const data = await res.json();
+    if (!res.ok) {
+      return [];
+    }
+    const data = await res.json();
 
-//     return data.questions;
-//   } catch (error) {
-//     return [];
-//   }
+    return data.questions;
+  } catch (error) {
+    return [];
+  }
 
-//   return [];
-// };
+  return [];
+};
 
 const validateNumberString = (num: string): Boolean => {
   for (let i = 0; i < num.length; i++) {
@@ -38,44 +31,45 @@ const validateNumberString = (num: string): Boolean => {
   return true;
 };
 
-// using server functions directly for fetching the questions
-// instead of implementing apis
-const getQuestions = async (name: String) => {
-  const companyName = name + ".csv";
-  const difficulty = ["Medium", "Easy", "Hard", ""];
+// // tried to use it, but vercel didn't support
+// // back to api calls
 
-  try {
-    const questionsDirectory = path.join(process.cwd(), "config", "questions");
+// const getQuestions = async (name: String) => {
+//   const companyName = name + ".csv";
+//   const difficulty = ["Medium", "Easy", "Hard", ""];
 
-    const filePath = path.join(questionsDirectory, companyName);
+//   try {
+//     const questionsDirectory = path.join(process.cwd(), "config", "questions");
 
-    const results: CompanyQuestion[] = [];
+//     const filePath = path.join(questionsDirectory, companyName);
 
-    await new Promise<CompanyQuestion[]>((resolve, reject) => {
-      let index = 1;
+//     const results: CompanyQuestion[] = [];
 
-      fs.createReadStream(filePath)
-        .pipe(csvParser())
-        .on("data", (data) => {
-          data.difficulty = data.difficulty.trim();
-          if (!difficulty.includes(data.difficulty)) data.difficulty = "";
-          if (!validateNumberString(data.num_occur)) {
-            data.num_occur = "1";
-          }
-          results.push({ ...data, index: index++ });
-        })
-        .on("end", () => {
-          resolve(results);
-        })
-        .on("error", (error) => {
-          reject(error);
-        });
-    });
+//     await new Promise<CompanyQuestion[]>((resolve, reject) => {
+//       let index = 1;
 
-    return results;
-  } catch (error) {
-    return [];
-  }
-};
+//       fs.createReadStream(filePath)
+//         .pipe(csvParser())
+//         .on("data", (data) => {
+//           data.difficulty = data.difficulty.trim();
+//           if (!difficulty.includes(data.difficulty)) data.difficulty = "";
+//           if (!validateNumberString(data.num_occur)) {
+//             data.num_occur = "1";
+//           }
+//           results.push({ ...data, index: index++ });
+//         })
+//         .on("end", () => {
+//           resolve(results);
+//         })
+//         .on("error", (error) => {
+//           reject(error);
+//         });
+//     });
+
+//     return results;
+//   } catch (error) {
+//     return [];
+//   }
+// };
 
 export { getQuestions };
