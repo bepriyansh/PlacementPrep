@@ -1,6 +1,11 @@
 import { CompanyQuestion } from "@/types/interfaces";
 
+const questionCache: Record<string, CompanyQuestion[]> = {};
 const getQuestions = async (company: string): Promise<CompanyQuestion[]> => {
+  if (questionCache[company]) {
+    return questionCache[company];
+  }
+
   try {
     const res = await fetch("/api/getquestions", {
       method: "POST",
@@ -15,6 +20,8 @@ const getQuestions = async (company: string): Promise<CompanyQuestion[]> => {
     }
     const data = await res.json();
 
+    questionCache[company] = data.questions;
+
     return data.questions;
   } catch (error) {
     return [];
@@ -23,16 +30,16 @@ const getQuestions = async (company: string): Promise<CompanyQuestion[]> => {
   return [];
 };
 
-const validateNumberString = (num: string): Boolean => {
-  for (let i = 0; i < num.length; i++) {
-    if (num[i] < "0" || num[i] > "9") return false;
-  }
-
-  return true;
-};
-
 // // tried to use it, but vercel didn't support
 // // back to api calls
+
+// const validateNumberString = (num: string): Boolean => {
+//   for (let i = 0; i < num.length; i++) {
+//     if (num[i] < "0" || num[i] > "9") return false;
+//   }
+
+//   return true;
+// };
 
 // const getQuestions = async (name: String) => {
 //   const companyName = name + ".csv";
