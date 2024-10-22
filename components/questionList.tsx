@@ -122,7 +122,7 @@ const QuestionList = (props: CompanyInterface) => {
   );
 
   return (
-    <div className="bg-default-50 p-4 rounded-xl max-h-[600px] overflow-y-auto">
+    <div className="bg-default-50 p-4 rounded-xl max-h-[calc(100dvh-20dvh)] overflow-y-auto">
       <div className="flex justify-end gap-2 w-full">
         <div className="w-full max-w-[400px] mb-5">{searchInput}</div>
       </div>
